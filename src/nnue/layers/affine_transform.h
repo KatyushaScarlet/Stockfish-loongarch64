@@ -47,7 +47,7 @@ static void affine_transform_non_ssse3(std::int32_t*       output,
                                        const std::int8_t*  weights,
                                        const std::int32_t* biases,
                                        const std::uint8_t* input) {
-    #if defined(USE_SSE2) || defined(USE_NEON_DOTPROD) || defined(USE_NEON)
+    #if defined(USE_SSE2) || defined(USE_NEON_DOTPROD) || defined(USE_NEON) || defined(USE_LSX)
         #if defined(USE_SSE2)
     // At least a multiple of 16, with SSE2.
     constexpr IndexType NumChunks   = ceil_to_multiple<IndexType>(InputDimensions, 16) / 16;
@@ -61,6 +61,10 @@ static void affine_transform_non_ssse3(std::int32_t*       output,
         #elif defined(USE_NEON)
     constexpr IndexType NumChunks   = ceil_to_multiple<IndexType>(InputDimensions, 16) / 16;
     const auto          inputVector = reinterpret_cast<const int8x8_t*>(input);
+        #elif defined(USE_LSX)
+    constexpr IndexType NumChunks   = ceil_to_multiple<IndexType>(InputDimensions, 16) / 16;
+    const __m128i       Zeros       = __lsx_vldi(0);
+    const auto          inputVector = reinterpret_cast<const __m128i*>(input);
         #endif
 
     for (IndexType i = 0; i < OutputDimensions; ++i)

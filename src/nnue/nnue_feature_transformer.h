@@ -145,6 +145,27 @@ inline vec_t vec_msb_pack_16(vec_t a, vec_t b) {
     #define NumRegistersSIMD 16
     #define MaxChunkSize 16
 
+#elif USE_LSX
+using vec_t      = __m128i;
+using psqt_vec_t = __m128i;
+    #define vec_load(a) __lsx_vld(a, 0)
+    #define vec_store(a, b) __lsx_vst(*(a), &b, 0)
+    #define vec_add_16(a, b) __lsx_vadd_h(a, b)
+    #define vec_sub_16(a, b) __lsx_vsub_h(a, b)
+    #define vec_mul_16(a, b) __lsx_vmul_h(a, b)
+    #define vec_zero() __lsx_vldi(0)
+    #define vec_set_16(a) __lsx_vreplgr2vr_w(a)
+    #define vec_max_16(a, b) __lsx_vmax_h(a, b)
+    #define vec_min_16(a, b) __lsx_vmin_h(a, b)
+    #define vec_msb_pack_16(a, b) __lsx_vpackod_w(__lsx_vsrli_b(a, 7), __lsx_vsrli_b(b, 7))
+    #define vec_load_psqt(a) __lsx_vld(a, 0)
+    #define vec_store_psqt(a, b) __lsx_vst(*(a), &b, 0)
+    #define vec_add_psqt_32(a, b) __lsx_vadd_w(a, b)
+    #define vec_sub_psqt_32(a, b) __lsx_vsub_w(a, b)
+    #define vec_zero_psqt() __lsx_vldi(0)
+    #define NumRegistersSIMD 16
+    #define MaxChunkSize 16
+
 #else
     #undef VECTOR
 

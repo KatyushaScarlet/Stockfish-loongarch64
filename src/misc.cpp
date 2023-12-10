@@ -291,6 +291,9 @@ std::string compiler_info() {
 #elif defined(USE_NEON)
     compiler += " NEON";
 #endif
+#if defined(USE_LSX)
+    compiler += " LSX";
+#endif
 
 #if !defined(NDEBUG)
     compiler += " DEBUG";

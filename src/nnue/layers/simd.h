@@ -31,6 +31,9 @@
 #elif defined(USE_SSE2)
     #include <emmintrin.h>
 
+#elif defined(USE_LSX)
+    #include <lsxintrin.h>
+
 #elif defined(USE_NEON)
     #include <arm_neon.h>
 #endif
